@@ -1,0 +1,76 @@
+const mongoose = require('mongoose');
+
+const CampSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Please add a name'],
+    unique: true,
+    trim: true,
+    maxLength: [50, 'Name can not be more than 50 characters']
+  },
+  description: {
+    type: String,
+    required: [false],
+    maxLength: [500, 'Description can not be more than 500 characters']
+  },
+  website: {
+    type: String,
+    match: [/https ?: \/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/, 'Please add a valid URL']
+  },
+  phone: {
+    type: String,
+    maxLength: [20, 'Phone number ca not be more than 20 characters']
+  },
+  email: {
+    type: String,
+    match: [/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please add a valid e-mail']
+  },
+  address: {
+    type: String,
+    required: [true, 'Please add an address']
+  },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      index: '2dsphere'
+    },
+    formattedAddress: String,
+    street: String,
+    city: String,
+    state: String,
+    zipcode: String,
+    country: String
+  },
+  activities: {
+    type: String,
+    required: true,
+    enum: ['Math', 'Language camp', 'Dancing', 'Art', 'Sport', 'Singing']
+  },
+  avarageRating: {
+    type: Number,
+    min: [1, 'Rating must be at least 1'],
+    max: [5, 'Rating can not be more than 5']
+  },
+  cost: Number,
+  photo: {
+    type: String,
+    default: 'no-photo.jpg'
+  },
+  housing: {
+    type: Boolean,
+    default: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+
+})
+
+module.exports = mongoose.model('Camp', CampSchema)
