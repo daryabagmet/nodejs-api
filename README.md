@@ -1,5 +1,6 @@
+## Camp activity board
 
-## API Reference
+### API Reference
 
 #### Get all camps
 
