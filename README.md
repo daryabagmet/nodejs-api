@@ -4,14 +4,14 @@
 
 #### Get all camps
 
-```http
-  GET /api/v1/camps
+```
+GET /api/v1/camps
 ```
 
 #### Get camp
 
-```http
-  GET /api/v1/camps/${id}
+```
+GET /api/v1/camps/${id}
 ```
 
 | Parameter | Type     | Description                       |
@@ -20,14 +20,14 @@
 
 #### Create new camp
 
-```http
-  POST /api/v1/camps
+```
+POST /api/v1/camps
 ```
 
 #### Delete camp
 
-```http
-  DELETE /api/v1/camps/${id}
+```
+DELETE /api/v1/camps/${id}
 ```
 
 | Parameter | Type     | Description                       |
