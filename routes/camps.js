@@ -4,10 +4,14 @@ const {
   getCamp,
   createCamp,
   updateCamp,
-  deleteCamp
+  deleteCamp,
+  getCampsInRadius
 } = require('../controllers/camps')
 
 const router = express.Router()
+
+router.route('/radius/:zipcode/:distance').get(getCampsInRadius)
+
 router.route('/').get(getCamps).post(createCamp)
 
 router.route('/:id').get(getCamp).put(updateCamp).delete(deleteCamp)
