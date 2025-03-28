@@ -1,24 +1,24 @@
-const ErrorResponse = require('../utils/errorResponse');
+const ErrorResponse = require('../utils/errorResponse')
 
 const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
+  let error = { ...err }
 
-  error.message = err.message;
+  error.message = err.message
 
-  console.log(err.stack);
+  console.log(err.stack)
 
   if (err.name === 'CastError') {
-    error = new ErrorResponse(`Record id: ${err.value} not found`, 404);
+    error = new ErrorResponse(`Record id: ${err.value} not found`, 404)
   }
 
   if (err.name === 'ValidationError') {
-    error = new ErrorResponse('Validation error', 400);
+    error = new ErrorResponse('Validation error', 400)
   }
 
   res.status(error.statusCode || 500).json({
     success: false,
-    error: error.message || 'Server error',
-  });
-};
+    error: error.message || 'Server error'
+  })
+}
 
-module.exports = errorHandler;
+module.exports = errorHandler

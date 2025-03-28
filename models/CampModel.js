@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const geocoder = require('../utils/geocoder');
+const mongoose = require('mongoose')
+const geocoder = require('../utils/geocoder')
 
 const CampSchema = new mongoose.Schema({
   name: {
@@ -16,7 +16,10 @@ const CampSchema = new mongoose.Schema({
   },
   website: {
     type: String,
-    match: [/https ?: \/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/, 'Please add a valid URL']
+    match: [
+      /https ?: \/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+      'Please add a valid URL'
+    ]
   },
   phone: {
     type: String,
@@ -24,7 +27,10 @@ const CampSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    match: [/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Please add a valid e-mail']
+    match: [
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Please add a valid e-mail'
+    ]
   },
   address: {
     type: String,
@@ -75,7 +81,7 @@ const CampSchema = new mongoose.Schema({
 
 //Geocode and location
 CampSchema.pre('save', async function (next) {
-  const loc = await geocoder.geocode(this.address);
+  const loc = await geocoder.geocode(this.address)
   this.location = {
     type: 'Point',
     coordinates: [loc[0].longitude, loc[0].latitude],
@@ -87,8 +93,7 @@ CampSchema.pre('save', async function (next) {
     country: loc[0].countryCode
   }
 
-  this.address = undefined;
+  this.address = undefined
 })
-
 
 module.exports = mongoose.model('Camp', CampSchema)

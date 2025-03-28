@@ -14,9 +14,9 @@ GET /api/v1/camps
 GET /api/v1/camps/${id}
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**.                     |
+| Parameter | Type     | Description   |
+| :-------- | :------- | :------------ |
+| `id`      | `string` | **Required**. |
 
 #### Create new camp
 
@@ -30,7 +30,6 @@ POST /api/v1/camps
 DELETE /api/v1/camps/${id}
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**.                     |
-
+| Parameter | Type     | Description   |
+| :-------- | :------- | :------------ |
+| `id`      | `string` | **Required**. |
