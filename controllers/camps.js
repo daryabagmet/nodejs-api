@@ -7,7 +7,27 @@ const Camp = require('../models/CampModel')
 //@route      GET /api/v1/camps
 //@access     Public
 exports.getCamps = asyncHandler(async (req, res, next) => {
-  const campsList = await Camp.find()
+  let query;
+
+  const reqQuery = {... req.query};
+
+  const removeFields = ['select'];
+  
+  removeFields.forEach(param => delete reqQuery[param])
+
+  let queryStr = JSON.stringify(req.query);
+
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+  query = Camp.find(JSON.parse(queryStr));
+
+  if(req.query.select) {
+    const fields = req.query.select.split(',').join(' ');
+    query = query.select(fields)
+  }
+
+  const campsList = await query;
+
   res
     .status(200)
     .json({ success: true, total: campsList.length, data: campsList })
