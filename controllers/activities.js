@@ -2,7 +2,7 @@ const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const Activity = require('../models/ActivityModel')
 
-//@desc       Get all activity
+//@desc       Get all activities
 //@route      GET /api/v1/activities
 //@access     Public
 exports.getActivities = asyncHandler(async (req, res, next) => {
@@ -11,7 +11,10 @@ exports.getActivities = asyncHandler(async (req, res, next) => {
   if (req.params.campId) {
     query = Activity.find({ camp: req.params.campId })
   } else {
-    quesry = Activity.find();
+    query = Activity.find().populate({
+      path: 'camp',
+      select: 'name description'
+    });
   }
 
   const activities = await query;

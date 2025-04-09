@@ -15,11 +15,11 @@ exports.getCamps = asyncHandler(async (req, res, next) => {
 
   removeFields.forEach(param => delete reqQuery[param])
 
-  let queryStr = JSON.stringify(req.query);
+  let queryStr = JSON.stringify(reqQuery);
 
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-  query = Camp.find(JSON.parse(queryStr));
+  query = Camp.find(JSON.parse(queryStr)).populate('activitiesList');
 
   if (req.query.select) {
     const fields = req.query.select.split(',').join(' ');
@@ -105,11 +105,13 @@ exports.updateCamp = asyncHandler(async (req, res, next) => {
 //@route      DELETE /api/v1/camps/:id
 //@access     Private
 exports.deleteCamp = asyncHandler(async (req, res, next) => {
-  const camp = await Camp.findByIdAndDelete(req.params.id)
+  const camp = await Camp.findById(req.params.id)
 
   if (!camp) {
     return next(new ErrorResponse(`Camp id: ${req.params.id} not found`, 404))
   }
+
+  camp.remove();
 
   res.status(200).json({ success: true, data: {} })
 })
@@ -120,12 +122,12 @@ exports.deleteCamp = asyncHandler(async (req, res, next) => {
 exports.getCampsInRadius = asyncHandler(async (req, res, next) => {
   const EARTH_RADIUS = 6378 //in km
   const { zipcode, distance } = req.params
-  const location = await geocoder.geocoder(zipcode)
+  const location = await geocoder.geocode(zipcode)
   const lat = location[0].latitude
   const lng = location[0].longitude
   const radius = distance / EARTH_RADIUS
   const camps = await Camp.find({
-    locstion: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+    location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
   })
 
   res.status(200).json({ success: true, total: camps.length, data: camps })

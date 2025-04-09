@@ -77,11 +77,19 @@ const CampSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-})
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+});
 
 //Geocode and location
 CampSchema.pre('save', async function (next) {
-  const loc = await geocoder.geocode(this.address)
+  const loc = await geocoder.geocode(this.address);
+
+  if (!loc || !loc.length) {
+    return next(new Error('Invalid address'));
+  }
+
   this.location = {
     type: 'Point',
     coordinates: [loc[0].longitude, loc[0].latitude],
@@ -93,7 +101,26 @@ CampSchema.pre('save', async function (next) {
     country: loc[0].countryCode
   }
 
-  this.address = undefined
+  this.address = undefined;
+
+  next();
+})
+
+//Activities in camp
+CampSchema.virtual('activitiesList', {
+  ref: 'Activity',
+  localField: '_id',
+  foreignField: 'camp',
+  justOne: false
+})
+
+//Delete activities when camp is deleted
+CampSchema.pre('remove', async function (next) {
+  await this.model('Activity').deleteMany({
+    camp: this._id
+  });
+
+  next();
 })
 
 module.exports = mongoose.model('Camp', CampSchema)
