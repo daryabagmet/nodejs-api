@@ -8,10 +8,20 @@
 GET /api/v1/camps
 ```
 
-#### Get camp
+#### Get all activities
+
+```
+GET /api/v1/activities
+```
+
+#### Get camp and related activities
 
 ```
 GET /api/v1/camps/${id}
+```
+
+```
+GET /api/v1/camps/${id}/activities
 ```
 
 | Parameter | Type     | Description   |
