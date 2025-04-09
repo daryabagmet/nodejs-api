@@ -29,6 +29,11 @@ const ActivitySchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  camp: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Camp',
+    required: true
   }
 });
 

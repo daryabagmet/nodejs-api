@@ -8,7 +8,10 @@ const {
   getCampsInRadius
 } = require('../controllers/camps')
 
+const activitiesRouter = require('./activities')
 const router = express.Router()
+
+router.use('/:campId/activities', activitiesRouter)
 
 router.route('/radius/:zipcode/:distance').get(getCampsInRadius)
 

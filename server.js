@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const camps = require('./routes/camps')
+const activities = require('./routes/activities')
 const morgan = require('morgan')
 const connectDB = require('./config/db')
 const errorHandler = require('./middleware/error')
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 
 //Mount routes
 app.use('/api/v1/camps', camps)
+app.use('/api/v1/activities', activities)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
