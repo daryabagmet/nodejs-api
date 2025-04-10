@@ -62,3 +62,40 @@ exports.addActivity = asyncHandler(async (req, res, next) => {
     .status(200)
     .json({ success: true, data: activity })
 })
+
+//@desc       Update an activity
+//@route      PUT /api/v1/activities/:id
+//@access     Private
+exports.updateActivity = asyncHandler(async (req, res, next) => {
+  let activity = await Activity.findById(req.params.id)
+
+  if (!activity) {
+    return next(new ErrorResponse('Activity not found'), 404)
+  }
+
+  activity = await Activity.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  res
+    .status(200)
+    .json({ success: true, data: activity })
+})
+
+//@desc       Delete an activity
+//@route      Delete /api/v1/activities/:id
+//@access     Private
+exports.deleteActivity = asyncHandler(async (req, res, next) => {
+  const activity = await Activity.findById(req.params.id)
+
+  if (!activity) {
+    return next(new ErrorResponse('Activity not found'), 404)
+  }
+
+  await activity.remove()
+
+  res
+    .status(200)
+    .json({ success: true, data: {} })
+})
