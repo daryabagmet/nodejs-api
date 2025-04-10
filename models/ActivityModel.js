@@ -37,4 +37,36 @@ const ActivitySchema = new mongoose.Schema({
   }
 });
 
+ActivitySchema.statics.getAverageCost = async function (campId) {
+  const result = await this.agregate([
+    {
+      $match: { camp: campId }
+    },
+    {
+      $group: {
+        _$id: '$camp',
+        averageCost: { $avg: 'tuition' }
+      }
+    }
+  ])
+
+  try {
+    await this.model('Camp').findByIdAndUpdate(campId, {
+      averageCost: Math.ceil(
+        result[0].averageCost / 10
+      ) * 10
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+ActivitySchema.post('save', async function (next) {
+  this.constructor.getAverageCost(this.camp)
+})
+
+ActivitySchema.pre('remove', async function (next) {
+  this.constructor.getAverageCost(this.camp)
+})
+
 module.exports = mongoose.model('Activity', ActivitySchema)
