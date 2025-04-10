@@ -1,6 +1,7 @@
 const ErrorResponse = require('../utils/errorResponse')
 const asyncHandler = require('../middleware/async')
 const Activity = require('../models/ActivityModel')
+const Camp = require('../models/CampModel')
 
 //@desc       Get all activities
 //@route      GET /api/v1/activities
@@ -22,4 +23,42 @@ exports.getActivities = asyncHandler(async (req, res, next) => {
   res
     .status(200)
     .json({ success: true, total: activities.length, data: activities })
+})
+
+
+//@desc       Get an activity
+//@route      GET /api/v1/activities/:id
+//@access     Public
+exports.getActivity = asyncHandler(async (req, res, next) => {
+  const activity = await Activity.findById(req.params.id).populate({
+    path: 'camp',
+    select: 'name description'
+  });
+
+  if (!activity) {
+    return next(new ErrorResponse('Activity not found'), 404)
+  }
+
+  res
+    .status(200)
+    .json({ success: true, data: activity })
+})
+
+//@desc       Add new activity
+//@route      POST /api/v1/camps/:campsId/activities
+//@access     Private
+exports.addActivity = asyncHandler(async (req, res, next) => {
+  req.body.camp = req.params.campId;
+
+  const camp = await Camp.findById(req.params.id)
+
+  if (!camp) {
+    return next(new ErrorResponse('Camp not found'), 404)
+  }
+
+  const activity = await Activity.create(req.body);
+
+  res
+    .status(200)
+    .json({ success: true, data: activity })
 })
