@@ -7,22 +7,21 @@ const Camp = require('../models/CampModel')
 //@route      GET /api/v1/activities
 //@access     Public
 exports.getActivities = asyncHandler(async (req, res, next) => {
-  let query;
-
   if (req.params.campId) {
-    query = Activity.find({ camp: req.params.campId })
+    const activities = Activity.find({ camp: req.params.campId })
+
+    return res
+      .status(200)
+      .json({
+        success: true,
+        count: activities.length,
+        data: activities
+      })
   } else {
-    query = Activity.find().populate({
-      path: 'camp',
-      select: 'name description'
-    });
+    res
+      .status(200)
+      .json(res.completedResults)
   }
-
-  const activities = await query;
-
-  res
-    .status(200)
-    .json({ success: true, total: activities.length, data: activities })
 })
 
 
