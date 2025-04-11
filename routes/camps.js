@@ -5,7 +5,8 @@ const {
   createCamp,
   updateCamp,
   deleteCamp,
-  getCampsInRadius
+  getCampsInRadius,
+  uploadCampImage
 } = require('../controllers/camps')
 
 const activitiesRouter = require('./activities')
@@ -18,5 +19,7 @@ router.route('/radius/:zipcode/:distance').get(getCampsInRadius)
 router.route('/').get(getCamps).post(createCamp)
 
 router.route('/:id').get(getCamp).put(updateCamp).delete(deleteCamp)
+
+router.route('/:id/photo').put(uploadCampImage)
 
 module.exports = router
