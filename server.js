@@ -3,6 +3,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const camps = require('./routes/camps')
 const activities = require('./routes/activities')
+const auth = require('./routes/auth')
 const morgan = require('morgan')
 const fileupload = require('express-fileupload')
 const connectDB = require('./config/db')
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 //Mount routes
 app.use('/api/v1/camps', camps)
 app.use('/api/v1/activities', activities)
+app.use('/api/v1/auth', auth)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
