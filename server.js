@@ -6,6 +6,7 @@ const activities = require('./routes/activities')
 const auth = require('./routes/auth')
 const morgan = require('morgan')
 const fileupload = require('express-fileupload')
+const cookieParser = require('cookie-parser')
 const connectDB = require('./config/db')
 const errorHandler = require('./middleware/error')
 
@@ -24,6 +25,9 @@ if (process.env.NODE_ENV === 'development') {
 
 //Uploading files
 app.use(fileupload())
+
+//Cookie parser
+app.use(cookieParser())
 
 //Set static folder
 app.use(express.static(path.join(__dirname, 'public')))

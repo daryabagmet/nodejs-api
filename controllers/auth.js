@@ -15,11 +15,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     role
   });
 
-  const token = user.getSignedJwtToken();
-
-  res
-    .status(200)
-    .json({ success: true, token })
+  sendTokenResponse(user, 200, res)
 });
 
 //@desc       Login user
@@ -32,21 +28,45 @@ exports.login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Please provide correct email and password', 400))
   }
 
-  const user = await User.FindOne({ email }).select('+password');
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
     return next(new ErrorResponse('Invalid credentials', 401))
   }
 
-  const isMatched = await User.matchPassword(password);
+  const isMatched = await user.matchPassword(password);
 
   if (!isMatched) {
     return next(new ErrorResponse('Invalid credentials', 401))
   }
 
+  sendTokenResponse(user, 200, res)
+
+})
+
+const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
+  const options = {
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    secure: true
+  }
+
   res
-    .status(200)
+    .status(statusCode)
+    .cookie('token', token, options)
     .json({ success: true, token })
-})
+}
+
+//@desc       Log user out / clear cookie
+//@route      GET /api/v1/auth/logout
+//@access     Public
+exports.logout = (req, res, next) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({ success: true, data: {} });
+};

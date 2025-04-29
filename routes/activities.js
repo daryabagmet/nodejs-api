@@ -6,13 +6,14 @@ const {
 
 const Activity = require('../models/ActivityModel');
 const completedResults = require('../middleware/completedResults')
+const { protect } = require('../middleware/auth')
 
 const router = express.Router({ mergeParams: true })
 
 router.route('/').get(completedResults(Activity, {
   path: 'camp',
   select: 'name description'
-}), getActivities).post(addActivity)
-router.route('/:id').get(getActivity).put(updateActivity).delete(deleteActivity)
+}), getActivities).post(protect, addActivity)
+router.route('/:id').get(getActivity).put(protect, updateActivity).delete(protect, deleteActivity)
 
 module.exports = router
